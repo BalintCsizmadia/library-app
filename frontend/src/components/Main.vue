@@ -47,6 +47,7 @@
     >
       <v-icon>mdi-chevron-up</v-icon>
     </v-btn>
+    <Footer />
   </v-app>
 </template>
 
@@ -55,6 +56,7 @@ import Vue from "vue";
 import BookSearch from "./BookSearch.vue";
 import BookList from "./BookList.vue";
 import BookStatistics from "./BookStatistics.vue";
+import Footer from "./Footer.vue";
 
 export default Vue.extend({
   name: "Main",
@@ -62,6 +64,7 @@ export default Vue.extend({
     BookSearch,
     BookList,
     BookStatistics,
+    Footer
   },
   data: () => ({
     changeEvent: false,
