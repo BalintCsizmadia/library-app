@@ -1,4 +1,4 @@
-# playground
+# Library app frontend
 
 ## Project setup
 ```
