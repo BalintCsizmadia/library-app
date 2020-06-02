@@ -1,5 +1,18 @@
-### npm start
-.. run in prod
+# Library app backend
 
-### npm run watch:dev
-.. run in dev mode and auto-restart server if it changes
+## 1. Create and set ".env" file based on example
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run watch:dev
+```
+
+### Compiles and run
+```
+npm start
+```
