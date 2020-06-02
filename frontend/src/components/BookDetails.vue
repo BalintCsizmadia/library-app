@@ -77,9 +77,9 @@ export default Vue.extend({
     },
     getBigCoverImage(coverUrl: string) {
       if (coverUrl) {
-      return coverUrl.replace('normal', 'big');
+        return coverUrl.replace("normal", "big");
       }
-    }
+    },
   },
 });
 </script>

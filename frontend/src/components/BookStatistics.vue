@@ -68,7 +68,6 @@
     <v-row>
       <v-col cols="12" md="12">
         <v-card class="pa-2" outlined tile>
-          <!-- <v-icon>mdi-tag</v-icon> -->
           <h3 class="space custom-font">
             <span class="text">Top tags</span>
           </h3>
