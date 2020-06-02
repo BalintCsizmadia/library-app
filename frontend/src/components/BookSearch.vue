@@ -1,7 +1,6 @@
 <template>
   <v-col xs="12">
     <v-card color="teal darken-2" dark>
-      <!-- <v-card-title class="headline red lighten-3">Search for Books</v-card-title> -->
       <v-card-text>
         <v-autocomplete
           v-model="model"
