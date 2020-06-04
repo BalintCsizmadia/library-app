@@ -44,9 +44,8 @@
           id="star"
           v-on:click="rateItem(item)"
           :color="item.like ? '#FFAB00' : ''"
+          >mdi-star</v-icon
         >
-          mdi-star
-        </v-icon>
 
         <modal
           v-on:method="deleteItem(item.id)"
@@ -62,13 +61,14 @@
 import Vue from "vue";
 import Modal from "./Modal.vue";
 import ImageModal from "./ImageModal.vue";
+import Book from "../model/book.interface";
 
 export default Vue.extend({
   name: "BookList",
   data: () => ({
     isLoading: false,
     search: null,
-    books: [],
+    books: [] as Book[],
     expanded: [],
     singleExpand: false,
     headers: [
@@ -77,25 +77,25 @@ export default Vue.extend({
       { text: "Release", value: "year_of_publishing" },
       { text: "Cover", value: "cover", sortable: false },
       { text: "Description", value: "data-table-expand", align: "center" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Actions", value: "actions", sortable: false }
     ],
     footerProps: {
-      "items-per-page-options": [10, 25, 50, -1],
-    },
+      "items-per-page-options": [10, 25, 50, -1]
+    }
   }),
   props: {
-    changeEvent: Boolean,
+    changeBook: Boolean
   },
   components: {
     Modal,
-    ImageModal,
+    ImageModal
   },
   created() {
     (this as any).loadList();
   },
   computed: {
     items() {
-      return this.books.map((item: any) => {
+      return this.books.map((item: Book) => {
         if (!item["year_of_publishing"]) {
           item["year_of_publishing"] = "n/a";
         }
@@ -103,28 +103,28 @@ export default Vue.extend({
           item.authors.push({ name: "Various authors" });
         }
         const fullName: string[] = [];
-        item.authors.map((i: any) => {
+        item.authors.map((i: { id?: number; name: string }) => {
           fullName.push(i.name);
         });
         const authorsNames = fullName.join(", ");
         return Object.assign({}, item, { authorsNames });
       });
-    },
+    }
   },
   watch: {
-    changeEvent(value: boolean) {
+    changeBook(value: boolean) {
       (this as any).loadList();
-    },
+    }
   },
   methods: {
     loadList() {
       this.isLoading = true;
       this.axios
         .get("/books/my-books")
-        .then((response) => {
+        .then((response: { data: { books: { table: Book[] } } }) => {
           this.books = response.data.books.table;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         })
         .finally(() => (this.isLoading = false));
@@ -138,8 +138,8 @@ export default Vue.extend({
       this.axios.delete(`/books/${id}`).then(() => {
         (this as any).loadList();
       });
-    },
-  },
+    }
+  }
 });
 </script>
 

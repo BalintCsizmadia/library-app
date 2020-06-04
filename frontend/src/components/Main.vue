@@ -1,34 +1,40 @@
 <template>
   <v-app id="inspire">
     <!-- <v-container> -->
-    <v-app-bar app color="teal darken-4" dark>
+    <v-app-bar app :color="theme.header" dark>
       <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-switch
+        v-model="isDark"
+        class="mx-2"
+        label="Dark mode"
+        hide-details
+      ></v-switch>
     </v-app-bar>
 
     <v-content>
-      <v-tabs background-color="teal darken-3" class="elevation-2" dark>
-        <v-tab>
-          Search
-        </v-tab>
+      <v-tabs :background-color="theme.subHeader" class="elevation-2" dark>
+        <v-tab>Search</v-tab>
+        <v-tab
+          v-on:click="changeBook ? (changeBook = false) : (changeBook = true)"
+          >Books</v-tab
+        >
         <v-tab
           v-on:click="
-            changeEvent ? (changeEvent = false) : (changeEvent = true)
+            changeStatistics
+              ? (changeStatistics = false)
+              : (changeStatistics = true)
           "
+          >Statistics</v-tab
         >
-          Books
-        </v-tab>
-        <v-tab>
-          Statistics
-        </v-tab>
-
         <v-tab-item>
-          <book-search />
+          <book-search :theme="theme" />
         </v-tab-item>
         <v-tab-item>
-          <book-list :changeEvent="changeEvent" />
+          <book-list :changeBook="changeBook" />
         </v-tab-item>
         <v-tab-item>
-          <book-statistics />
+          <book-statistics :changeStatistics="changeStatistics" />
         </v-tab-item>
       </v-tabs>
     </v-content>
@@ -57,6 +63,7 @@ import BookSearch from "./BookSearch.vue";
 import BookList from "./BookList.vue";
 import BookStatistics from "./BookStatistics.vue";
 import Footer from "./Footer.vue";
+import { Theme } from "../model/theme.enum";
 
 export default Vue.extend({
   name: "Main",
@@ -67,14 +74,22 @@ export default Vue.extend({
     Footer
   },
   data: () => ({
-    changeEvent: false,
+    changeBook: false,
+    changeStatistics: false,
     fab: false,
+    theme: {
+      header: "teal darken-4",
+      subHeader: "teal darken-3",
+      item: "teal darken-2",
+      subItem: "teal darken-3"
+    },
+    isDark: false
   }),
   props: {
-    title: String,
+    title: String
   },
   methods: {
-    onScroll(e: any) {
+    onScroll(e: { target: HTMLInputElement }) {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
       this.fab = top > 400;
@@ -82,7 +97,37 @@ export default Vue.extend({
     toTop() {
       this.$vuetify.goTo(0);
     },
+    setTheme(theme: Theme) {
+      if (theme === Theme.LIGHT) {
+        this.theme = {
+          header: "teal darken-4",
+          subHeader: "teal darken-3",
+          item: "teal darken-2",
+          subItem: "teal darken-3"
+        };
+      } else if (theme === Theme.DARK) {
+        this.theme = {
+          header: "black",
+          subHeader: "#121212",
+          item: "#1E1E1E",
+          subItem: "black"
+        };
+      } else {
+        throw new Error("Invalid theme");
+      }
+    }
   },
+  watch: {
+    isDark(dark: boolean) {
+      if (!dark) {
+        this.$vuetify.theme.dark = false;
+        this.setTheme(Theme.LIGHT);
+      } else {
+        this.$vuetify.theme.dark = true;
+        this.setTheme(Theme.DARK);
+      }
+    }
+  }
 });
 </script>
 
@@ -102,5 +147,4 @@ li {
 a {
   color: #42b983;
 }
-
 </style>
