@@ -28,7 +28,7 @@ router.get("/statistics", async function (req, res, next) {
   if (result && result.statistics) {
     res.status(200).send(result);
   } else {
-    res.status(500).send({ data: { statistics: null,  error: result.data.errno } }); // -2 = no such file or directory
+    res.status(500).send({ data: { statistics: null,  error: result.data.errno } });
   }
 });
 
@@ -47,7 +47,7 @@ router.get("/:id", async function (req, res, next) {
 router.post("/:id", async function (req, res, next) {
   const book = req.body.book;
   bookService.saveToFile(book);
-  res.status(200).send({ message: "status message here" });
+  res.status(200).send({ message: "status message" });
 });
 
 /**
