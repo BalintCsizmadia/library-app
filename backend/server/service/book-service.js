@@ -11,10 +11,14 @@ const KEY = process.env.API_KEY;
 
 const bookService = {
   getBySearhTerm: async (search) => {
-    const { data } = await axiosInst.get(`/books.json`, {
-      params: { q: search, key: KEY },
-    });
-    return data;
+    if (search) {
+      const { data } = await axiosInst.get(`/books.json`, {
+        params: { q: search, key: KEY },
+      });
+      return data;
+    } else {
+      return new Error("Invalid input");
+    }
   },
 
   getById: async (id) => {
@@ -62,7 +66,11 @@ const bookService = {
   },
 
   saveToFile: (book) => {
-    return fileHandler.saveOrUpdate("data.json", book);
+    if (book) {
+      return fileHandler.saveOrUpdate("data.json", book);
+    } else {
+      throw new Error("Invalid parameter");
+    }
   },
 
   getBooks: () => {

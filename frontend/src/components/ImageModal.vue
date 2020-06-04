@@ -34,12 +34,12 @@ export default Vue.extend({
   name: "ImageModal",
   data() {
     return {
-      dialog: false,
+      dialog: false
     };
   },
   props: {
-    image: String,
-  },
+    image: String
+  }
 });
 </script>
 

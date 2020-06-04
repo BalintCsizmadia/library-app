@@ -1,5 +1,5 @@
 <template>
-  <v-list class="teal darken-3">
+  <v-list :class="color ? color : 'teal darken-3'">
     <v-parallax dark src="../assets/book.jpg">
       <img class="cover-img" v-bind:src="getBigCoverImage(book.cover)" />
     </v-parallax>
@@ -50,27 +50,29 @@
 <script lang="ts">
 import Vue from "vue";
 import Notification from "./Notification.vue";
+import Book from "../model/book.interface";
 
 export default Vue.extend({
   name: "BookDetails",
   data: () => ({
     showNotification: false,
-    background: "pink",
+    background: "pink"
   }),
   props: {
     book: Object,
     fields: Array,
+    color: String
   },
   components: {
-    Notification,
+    Notification
   },
   methods: {
     handleTextDisplay(key: string) {
       return key === "fullName" ? "display: none;" : "";
     },
-    addToList(book: any) {
+    addToList(book: Book) {
       this.showNotification = true;
-      return this.axios.post(`/books/${book.id}`, { book }).then((res) => {
+      return this.axios.post(`/books/${book.id}`, { book }).then(res => {
         this.showNotification = false;
         this.background = "green darken-3";
       });
@@ -79,8 +81,8 @@ export default Vue.extend({
       if (coverUrl) {
         return coverUrl.replace("normal", "big");
       }
-    },
-  },
+    }
+  }
 });
 </script>
 

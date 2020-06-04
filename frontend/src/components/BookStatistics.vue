@@ -7,7 +7,8 @@
             >mdi-book-open-page-variant</v-icon
           >
           <h3 class="space custom-font">
-            <span class="text">Books:</span> {{ statistics.numberOfBooks }}
+            <span class="text">Books:</span>
+            {{ statistics.numberOfBooks }}
           </h3>
         </v-card>
       </v-col>
@@ -17,10 +18,8 @@
       <v-col cols="12" sm="6" md="6">
         <v-card class="pa-2" outlined tile>
           <v-icon>mdi-grease-pencil</v-icon>
-          <v-card-title class="subheading font-weight-bold custom-padding"
-            ><p class="custom-font text">
-              Writer / Books
-            </p>
+          <v-card-title class="subheading font-weight-bold custom-padding">
+            <p class="custom-font text">Writer / Books</p>
           </v-card-title>
 
           <v-divider></v-divider>
@@ -30,12 +29,12 @@
               v-for="author in statistics.topTenFavoriteAuthors"
               :key="author.name"
             >
-              <v-list-item-content
-                ><p>{{ author.name }}</p></v-list-item-content
-              >
-              <v-list-item-content class="align-end"
-                ><p>{{ author.count }}</p></v-list-item-content
-              >
+              <v-list-item-content>
+                <p>{{ author.name }}</p>
+              </v-list-item-content>
+              <v-list-item-content class="align-end">
+                <p>{{ author.count }}</p>
+              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
@@ -54,12 +53,12 @@
               v-for="book in statistics.topTenBooksPerReleaseYear"
               :key="book.year"
             >
-              <v-list-item-content
-                ><p>{{ book.year }}</p></v-list-item-content
-              >
-              <v-list-item-content class="align-end"
-                ><p>{{ book.count }}</p></v-list-item-content
-              >
+              <v-list-item-content>
+                <p>{{ book.year }}</p>
+              </v-list-item-content>
+              <v-list-item-content class="align-end">
+                <p>{{ book.count }}</p>
+              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
@@ -76,9 +75,8 @@
               class="ma-2"
               v-for="tag in statistics.topTenTags"
               :key="tag.name"
+              >{{ tag.name }}</v-chip
             >
-              {{ tag.name }}
-            </v-chip>
           </div>
         </v-card>
       </v-col>
@@ -115,7 +113,9 @@
           <div>
             <p>
               {{ book.like_count }}
-              <span class="like-btn"><v-icon small>mdi-thumb-up</v-icon></span>
+              <span class="like-btn">
+                <v-icon small>mdi-thumb-up</v-icon>
+              </span>
             </p>
           </div>
         </v-card>
@@ -164,7 +164,9 @@
 
             <p>
               {{ book.like_average.toFixed(2) }}
-              <span class="like-btn"><v-icon small>mdi-percent</v-icon></span>
+              <span class="like-btn">
+                <v-icon small>mdi-percent</v-icon>
+              </span>
             </p>
           </div>
         </v-card>
@@ -178,24 +180,35 @@
 
 <script lang="ts">
 import Vue from "vue";
+import BookStatistics from "../model/book-statistics.interface";
 
 export default Vue.extend({
   name: "BookStatistics",
   data: () => ({
-    statistics: null,
+    statistics: {} as BookStatistics
   }),
+  props: {
+    changeStatistics: Boolean
+  },
+  watch: {
+    changeStatistics(value: boolean) {
+      (this as any).getStatistics();
+    }
+  },
   methods: {
     getStatistics() {
-      this.axios.get("/books/statistics").then((response) => {
-        if (response.data.statistics) {
-          this.statistics = response.data.statistics;
-        }
-      });
-    },
+      this.axios
+        .get("/books/statistics")
+        .then((response: { data: { statistics: BookStatistics } }) => {
+          if (response.data.statistics) {
+            this.statistics = response.data.statistics;
+          }
+        });
+    }
   },
   created() {
     (this as any).getStatistics();
-  },
+  }
 });
 </script>
 
