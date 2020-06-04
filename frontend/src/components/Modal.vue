@@ -34,19 +34,19 @@ export default Vue.extend({
   name: "Modal",
   data() {
     return {
-      dialog: false,
+      dialog: false
     };
   },
   props: {
     method: Function,
     icon: String,
-    title: String,
+    title: String
   },
   methods: {
     yes() {
       this.$emit("method");
       this.dialog = false;
-    },
-  },
+    }
+  }
 });
 </script>

@@ -26,18 +26,18 @@ export default Vue.extend({
     defaultText: "Success",
     timeout: 3000,
     x: "right",
-    y: "bottom",
+    y: "bottom"
   }),
   props: {
     show: Boolean,
-    text: String,
+    text: String
   },
   watch: {
     show(value: boolean) {
       if (value) {
         this.snackbar = value;
       }
-    },
-  },
+    }
+  }
 });
 </script>
