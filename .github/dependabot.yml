@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/backend'
+    schedule:
+      interval: 'weekly'
+    target-branch: "develop"
+    open-pull-requests-limit: 25
+    commit-message:
+      prefix: 'security-b'
+  - package-ecosystem: 'github-actions'
+    directory: '/backend'
+    schedule:
+      interval: 'weekly'
+    target-branch: "develop"
+    open-pull-requests-limit: 25
+    commit-message:
+      prefix: 'security-b'
+  - package-ecosystem: 'npm'
+    directory: '/frontend'
+    schedule:
+      interval: 'weekly'
+    target-branch: "develop"
+    open-pull-requests-limit: 25
+    commit-message:
+      prefix: 'security-f'
+  - package-ecosystem: 'github-actions'
+    directory: '/frontend'
+    schedule:
+      interval: 'weekly'
+    target-branch: "develop"
+    open-pull-requests-limit: 25
+    commit-message:
+      prefix: 'security-f'
+  
