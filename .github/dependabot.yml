@@ -4,6 +4,7 @@ updates:
     directory: '/backend'
     schedule:
       interval: 'weekly'
+    target-branch: "develop"
     open-pull-requests-limit: 25
     commit-message:
       prefix: 'security-b'
@@ -11,6 +12,7 @@ updates:
     directory: '/backend'
     schedule:
       interval: 'weekly'
+    target-branch: "develop"
     open-pull-requests-limit: 25
     commit-message:
       prefix: 'security-b'
@@ -18,6 +20,7 @@ updates:
     directory: '/frontend'
     schedule:
       interval: 'weekly'
+    target-branch: "develop"
     open-pull-requests-limit: 25
     commit-message:
       prefix: 'security-f'
@@ -25,6 +28,7 @@ updates:
     directory: '/frontend'
     schedule:
       interval: 'weekly'
+    target-branch: "develop"
     open-pull-requests-limit: 25
     commit-message:
       prefix: 'security-f'
