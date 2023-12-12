@@ -1,18 +1,27 @@
-library-backend-api:
-  container_name: library-backend
-  image: librarybackdev:0.5.29
-  ports:
-    - "3000:3000"
+version: "3.4"
 
-library-frontend-web:
-  container_name: library-frontend
-  image: libraryfrontdev:0.5.29
-  links:
-    - library-backend-api
-  ports:
-    - "8080:8080"
-  volumes:
-    - './frontend:/frontend'
-    - '/frontend/node_modules'
+services:
 
-# docker-compose up
+  library_api:
+    container_name: library-api
+    build: ./backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app_net
+
+  library_web:
+    container_name: library-web
+    build: ./frontend
+    links:
+      - library_api
+    ports:
+      - "8080:8080"
+    volumes:
+      - './frontend:/frontend'
+      - '/frontend/node_modules'
+    networks:
+      - app_net
+
+networks:
+  app_net:
