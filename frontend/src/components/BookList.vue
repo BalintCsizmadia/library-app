@@ -34,7 +34,7 @@
       </template>
 
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">{{ item.description }}</td>
+        <td class="book-descr" :colspan="headers.length">{{ item.description }}</td>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -144,6 +144,10 @@ export default Vue.extend({
 </script>
 
 <style>
+.book-descr {
+  padding: 20px !important;
+}
+
 #star:hover {
   color: #ffab00;
 }
