@@ -1,55 +1,63 @@
 <template>
-  <v-app id="inspire">
-    <!-- <v-container> -->
-    <v-app-bar app :color="theme.header" dark>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-switch
-        v-model="isDark"
-        class="mx-2"
-        label="Dark mode"
-        hide-details
-      ></v-switch>
+  <v-app>
+    <v-app-bar color="primary" elevation="0" border="b">
+      <template #prepend>
+        <v-icon class="ms-3" size="26">mdi-bookshelf</v-icon>
+      </template>
+      <v-app-bar-title class="font-weight-bold">{{ title }}</v-app-bar-title>
+      <template #append>
+        <v-btn
+          :icon="isDark ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+          variant="text"
+          class="me-1"
+          @click="isDark = !isDark"
+        />
+      </template>
     </v-app-bar>
 
-    <v-content>
-      <v-tabs :background-color="theme.subHeader" class="elevation-2" dark>
-        <v-tab>Search</v-tab>
+    <v-main class="bg-background">
+      <v-tabs
+        v-model="tab"
+        color="secondary"
+        bg-color="primary"
+        align-tabs="center"
+        class="elevation-1"
+      >
+        <v-tab value="search" prepend-icon="mdi-magnify">Search</v-tab>
         <v-tab
-          v-on:click="changeBook ? (changeBook = false) : (changeBook = true)"
-          >Books</v-tab
-        >
+          value="books"
+          prepend-icon="mdi-format-list-bulleted"
+          @click="changeBook = !changeBook"
+        >My Books</v-tab>
         <v-tab
-          v-on:click="
-            changeStatistics
-              ? (changeStatistics = false)
-              : (changeStatistics = true)
-          "
-          >Statistics</v-tab
-        >
-        <v-tab-item>
-          <book-search :theme="theme" />
-        </v-tab-item>
-        <v-tab-item>
-          <book-list :changeBook="changeBook" />
-        </v-tab-item>
-        <v-tab-item>
-          <book-statistics :changeStatistics="changeStatistics" />
-        </v-tab-item>
+          value="statistics"
+          prepend-icon="mdi-chart-box"
+          @click="changeStatistics = !changeStatistics"
+        >Statistics</v-tab>
       </v-tabs>
-    </v-content>
-    <!-- </v-container> -->
+
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item value="search">
+          <book-search />
+        </v-tabs-window-item>
+        <v-tabs-window-item value="books">
+          <book-list :change-book="changeBook" />
+        </v-tabs-window-item>
+        <v-tabs-window-item value="statistics">
+          <book-statistics :change-statistics="changeStatistics" />
+        </v-tabs-window-item>
+      </v-tabs-window>
+    </v-main>
+
     <v-btn
       v-scroll="onScroll"
       v-show="fab"
-      fab
-      dark
-      fixed
-      bottom
-      right
-      large
+      icon
+      size="large"
       color="primary"
-      v-on:click="toTop"
+      style="position: fixed; bottom: 24px; right: 24px; z-index: 1000;"
+      elevation="4"
+      @click="toTop"
     >
       <v-icon>mdi-chevron-up</v-icon>
     </v-btn>
@@ -57,94 +65,36 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useTheme, useGoTo } from "vuetify";
 import BookSearch from "./BookSearch.vue";
 import BookList from "./BookList.vue";
 import BookStatistics from "./BookStatistics.vue";
 import Footer from "./Footer.vue";
-import { Theme } from "../model/theme.enum";
 
-export default Vue.extend({
-  name: "Main",
-  components: {
-    BookSearch,
-    BookList,
-    BookStatistics,
-    Footer
-  },
-  data: () => ({
-    changeBook: false,
-    changeStatistics: false,
-    fab: false,
-    theme: {
-      header: "teal darken-4",
-      subHeader: "teal darken-3",
-      item: "teal darken-2",
-      subItem: "teal darken-3"
-    },
-    isDark: false
-  }),
-  props: {
-    title: String
-  },
-  methods: {
-    onScroll(e: { target: HTMLInputElement }) {
-      if (typeof window === "undefined") return;
-      const top = window.pageYOffset || e.target.scrollTop || 0;
-      this.fab = top > 400;
-    },
-    toTop() {
-      this.$vuetify.goTo(0);
-    },
-    setTheme(theme: Theme) {
-      if (theme === Theme.LIGHT) {
-        this.theme = {
-          header: "teal darken-4",
-          subHeader: "teal darken-3",
-          item: "teal darken-2",
-          subItem: "teal darken-3"
-        };
-      } else if (theme === Theme.DARK) {
-        this.theme = {
-          header: "black",
-          subHeader: "#121212",
-          item: "#1E1E1E",
-          subItem: "black"
-        };
-      } else {
-        throw new Error("Invalid theme");
-      }
-    }
-  },
-  watch: {
-    isDark(dark: boolean) {
-      if (!dark) {
-        this.$vuetify.theme.dark = false;
-        this.setTheme(Theme.LIGHT);
-      } else {
-        this.$vuetify.theme.dark = true;
-        this.setTheme(Theme.DARK);
-      }
-    }
-  }
+defineProps<{ title: string }>();
+
+const vuetifyTheme = useTheme();
+const goTo = useGoTo();
+
+const tab = ref("search");
+const changeBook = ref(false);
+const changeStatistics = ref(false);
+const fab = ref(false);
+const isDark = ref(false);
+
+function onScroll(e: Event) {
+  if (typeof window === "undefined") return;
+  const top = window.pageYOffset || (e.target as HTMLElement).scrollTop || 0;
+  fab.value = top > 400;
+}
+
+function toTop() {
+  goTo(0);
+}
+
+watch(isDark, (dark: boolean) => {
+  vuetifyTheme.global.name.value = dark ? "dark" : "light";
 });
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

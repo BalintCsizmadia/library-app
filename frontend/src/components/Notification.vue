@@ -1,43 +1,34 @@
 <template>
   <v-snackbar
     v-model="snackbar"
-    :bottom="y === 'bottom'"
     :color="color"
-    :left="x === 'left'"
-    :right="x === 'right'"
     :timeout="timeout"
-    :top="y === 'top'"
+    location="bottom right"
   >
-    {{ text ? text : defaultText }}
-    <v-btn dark text v-on:click="snackbar = false">
-      Close
-    </v-btn>
+    {{ text ?? defaultText }}
+    <template #actions>
+      <v-btn variant="text" @click="snackbar = false">Close</v-btn>
+    </template>
   </v-snackbar>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
 
-export default Vue.extend({
-  name: "Notification",
-  data: () => ({
-    color: "success",
-    snackbar: false,
-    defaultText: "Success",
-    timeout: 3000,
-    x: "right",
-    y: "bottom"
-  }),
-  props: {
-    show: Boolean,
-    text: String
-  },
-  watch: {
-    show(value: boolean) {
-      if (value) {
-        this.snackbar = value;
-      }
-    }
+const props = defineProps<{
+  show: boolean;
+  text?: string;
+}>();
+
+const color = ref("success");
+const snackbar = ref(false);
+const defaultText = "Success";
+const timeout = ref(3000);
+
+watch(
+  () => props.show,
+  (value: boolean) => {
+    if (value) snackbar.value = true;
   }
-});
+);
 </script>

@@ -1,4 +1,4 @@
-FROM node:12.2.0-alpine
+FROM node:20-alpine
 
 WORKDIR /frontend
 
@@ -10,4 +10,4 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

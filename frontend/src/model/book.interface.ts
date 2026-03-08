@@ -5,6 +5,7 @@ export default interface Book {
   cover: string;
   description: string;
   editors: any[];
+  like?: boolean;
   like_average: number;
   like_count: number;
   reviews_count: number;

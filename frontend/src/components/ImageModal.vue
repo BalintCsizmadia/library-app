@@ -4,7 +4,7 @@
       :src="image"
       alt="cover"
       width="30px"
-      v-on:click.stop="dialog = true"
+      @click.stop="dialog = true"
     ></v-img>
 
     <v-dialog v-model="dialog" max-width="450">
@@ -17,30 +17,19 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-
-          <v-btn color="blue darken-1" text v-on:click="dialog = false"
-            >Back</v-btn
-          >
+          <v-btn color="blue-darken-1" variant="text" @click="dialog = false">Back</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </button>
 </template>
 
-<script>
-import Vue from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 
-export default Vue.extend({
-  name: "ImageModal",
-  data() {
-    return {
-      dialog: false
-    };
-  },
-  props: {
-    image: String
-  }
-});
+defineProps<{ image: string }>();
+
+const dialog = ref(false);
 </script>
 
 <style scoped>

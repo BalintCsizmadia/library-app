@@ -4,16 +4,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
 import Main from "./components/Main.vue";
-
-export default Vue.extend({
-  name: "App",
-  components: {
-    Main
-  }
-});
 </script>
 
 <style>
