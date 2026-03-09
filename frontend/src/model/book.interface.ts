@@ -4,7 +4,7 @@ export default interface Book {
   citations_count: number;
   cover: string;
   description: string;
-  editors: any[];
+  editors: unknown[];
   like?: boolean;
   like_average: number;
   like_count: number;

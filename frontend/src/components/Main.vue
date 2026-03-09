@@ -28,12 +28,14 @@
           value="books"
           prepend-icon="mdi-format-list-bulleted"
           @click="changeBook = !changeBook"
-        >My Books</v-tab>
+          >My Books</v-tab
+        >
         <v-tab
           value="statistics"
           prepend-icon="mdi-chart-box"
           @click="changeStatistics = !changeStatistics"
-        >Statistics</v-tab>
+          >Statistics</v-tab
+        >
       </v-tabs>
 
       <v-tabs-window v-model="tab">
@@ -50,12 +52,12 @@
     </v-main>
 
     <v-btn
-      v-scroll="onScroll"
       v-show="fab"
+      v-scroll="onScroll"
       icon
       size="large"
       color="primary"
-      style="position: fixed; bottom: 24px; right: 24px; z-index: 1000;"
+      style="position: fixed; bottom: 24px; right: 24px; z-index: 1000"
       elevation="4"
       @click="toTop"
     >
@@ -66,26 +68,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useTheme, useGoTo } from "vuetify";
-import BookSearch from "./BookSearch.vue";
-import BookList from "./BookList.vue";
-import BookStatistics from "./BookStatistics.vue";
-import Footer from "./Footer.vue";
+import { ref, watch } from 'vue';
+import { useTheme, useGoTo } from 'vuetify';
+import BookSearch from './BookSearch.vue';
+import BookList from './BookList.vue';
+import BookStatistics from './BookStatistics.vue';
+import Footer from './Footer.vue';
 
 defineProps<{ title: string }>();
 
 const vuetifyTheme = useTheme();
 const goTo = useGoTo();
 
-const tab = ref("search");
+const tab = ref('search');
 const changeBook = ref(false);
 const changeStatistics = ref(false);
 const fab = ref(false);
 const isDark = ref(false);
 
 function onScroll(e: Event) {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
   const top = window.pageYOffset || (e.target as HTMLElement).scrollTop || 0;
   fab.value = top > 400;
 }
@@ -95,6 +97,6 @@ function toTop() {
 }
 
 watch(isDark, (dark: boolean) => {
-  vuetifyTheme.global.name.value = dark ? "dark" : "light";
+  vuetifyTheme.global.name.value = dark ? 'dark' : 'light';
 });
 </script>

@@ -14,7 +14,7 @@
       <div
         v-else
         class="d-flex align-center justify-center bg-surface-variant flex-shrink-0"
-        style="min-width: 200px; min-height: 240px;"
+        style="min-width: 200px; min-height: 240px"
       >
         <v-icon size="72" color="secondary">mdi-book-open-page-variant</v-icon>
       </div>
@@ -23,7 +23,7 @@
       <div class="flex-grow-1 pa-5">
         <h2 class="text-h5 font-weight-bold mb-1">{{ book.title || '—' }}</h2>
         <p class="text-subtitle-1 text-secondary font-weight-medium mb-4">
-          {{ book.authors?.map(a => a.name).join(', ') || 'Unknown author' }}
+          {{ book.authors?.map((a) => a.name).join(', ') || 'Unknown author' }}
         </p>
 
         <div class="d-flex flex-wrap ga-2 mb-4">
@@ -33,26 +33,28 @@
             color="primary"
             variant="tonal"
             prepend-icon="mdi-calendar"
-          >{{ book.year_of_publishing }}</v-chip>
+            >{{ book.year_of_publishing }}</v-chip
+          >
           <v-chip
             v-if="book.like_count"
             size="small"
             color="secondary"
             variant="tonal"
             prepend-icon="mdi-thumb-up"
-          >{{ book.like_count }} likes</v-chip>
+            >{{ book.like_count }} likes</v-chip
+          >
           <v-chip
             v-if="book.reviews_count"
             size="small"
             variant="tonal"
             prepend-icon="mdi-comment-text"
-          >{{ book.reviews_count }} reviews</v-chip>
+            >{{ book.reviews_count }} reviews</v-chip
+          >
         </div>
 
-        <p
-          v-if="book.description"
-          class="text-body-2 text-medium-emphasis mb-5 book-description"
-        >{{ book.description }}</p>
+        <p v-if="book.description" class="text-body-2 text-medium-emphasis mb-5 book-description">
+          {{ book.description }}
+        </p>
 
         <v-btn
           color="secondary"
@@ -61,7 +63,8 @@
           prepend-icon="mdi-bookmark-plus"
           :loading="adding"
           @click="addToList(book)"
-        >Add to my list</v-btn>
+          >Add to my list</v-btn
+        >
       </div>
     </div>
     <notification :show="showNotification" text="Book added to your list!" />
@@ -69,10 +72,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from "vue";
-import Notification from "./Notification.vue";
-import type Book from "../model/book.interface";
-import api from "../api/axios";
+import { ref, nextTick } from 'vue';
+import Notification from './Notification.vue';
+import type Book from '../model/book.interface';
+import api from '../api/axios';
 
 defineProps<{ book: Partial<Book> }>();
 
@@ -80,7 +83,7 @@ const showNotification = ref(false);
 const adding = ref(false);
 
 function getBigCoverImage(coverUrl: string) {
-  return coverUrl.replace("normal", "big");
+  return coverUrl.replace('normal', 'big');
 }
 
 async function addToList(book: Partial<Book>) {
@@ -90,7 +93,9 @@ async function addToList(book: Partial<Book>) {
   showNotification.value = false;
   await nextTick();
   showNotification.value = true;
-  nextTick(() => { showNotification.value = false; });
+  nextTick(() => {
+    showNotification.value = false;
+  });
 }
 </script>
 

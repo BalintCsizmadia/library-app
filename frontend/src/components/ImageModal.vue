@@ -1,19 +1,10 @@
 <template>
   <button>
-    <v-img
-      :src="image"
-      alt="cover"
-      width="30px"
-      @click.stop="dialog = true"
-    ></v-img>
+    <v-img :src="image" alt="cover" width="30px" @click.stop="dialog = true"></v-img>
 
     <v-dialog v-model="dialog" max-width="450">
-      <v-card>
-        <img
-          :src="image.replace('normal', 'big')"
-          width="400"
-          class="cover-image"
-        />
+      <v-card style="align-items: center">
+        <img :src="image.replace('normal', 'big')" width="400" class="cover-image" />
 
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -25,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
 
 defineProps<{ image: string }>();
 

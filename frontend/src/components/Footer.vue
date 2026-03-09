@@ -5,7 +5,9 @@
         <v-icon size="16" color="white">mdi-information-outline</v-icon>
         <span class="text-body-2">
           Data sourced from
-          <a href="https://moly.hu/" target="_blank" class="footer-link font-weight-medium">MOLY.hu</a>
+          <a href="https://moly.hu/" target="_blank" class="footer-link font-weight-medium"
+            >MOLY.hu</a
+          >
         </span>
       </div>
     </v-container>

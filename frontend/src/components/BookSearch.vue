@@ -12,9 +12,9 @@
 
         <v-autocomplete
           v-model="model"
+          v-model:search="search"
           :items="items"
           :loading="isLoading"
-          v-model:search="search"
           variant="outlined"
           rounded="lg"
           density="comfortable"
@@ -42,11 +42,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import BookDetails from "./BookDetails.vue";
-import type BasicBook from "../model/book-basic.interface";
-import type Book from "../model/book.interface";
-import api from "../api/axios";
+import { ref, computed, watch } from 'vue';
+import BookDetails from './BookDetails.vue';
+import type BasicBook from '../model/book-basic.interface';
+import type Book from '../model/book.interface';
+import api from '../api/axios';
 
 const isLoading = ref(false);
 const model = ref<(BasicBook & { fullName: string }) | null>(null);
@@ -66,7 +66,7 @@ watch(search, (val: string | undefined) => {
     if (isLoading.value) return;
     isLoading.value = true;
     api
-      .get("/books", { params: { search: val.trim() } })
+      .get('/books', { params: { search: val.trim() } })
       .then((res: { data: { books: BasicBook[] } }) => {
         books.value = res.data.books;
       })

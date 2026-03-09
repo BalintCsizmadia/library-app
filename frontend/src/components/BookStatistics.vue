@@ -6,7 +6,7 @@
         <v-card rounded="xl" color="primary" class="pa-6 text-center">
           <v-icon size="52" class="mb-2" color="white">mdi-bookshelf</v-icon>
           <div class="text-h2 font-weight-bold text-white mb-1">{{ statistics.numberOfBooks }}</div>
-          <div class="text-body-1 text-white" style="opacity:0.85">Books in your collection</div>
+          <div class="text-body-1 text-white" style="opacity: 0.85">Books in your collection</div>
         </v-card>
       </v-col>
     </v-row>
@@ -21,12 +21,14 @@
           </v-card-title>
           <v-divider />
           <v-list density="compact" lines="one">
-            <v-list-item
-              v-for="(author, i) in statistics.topTenFavoriteAuthors"
-              :key="author.name"
-            >
+            <v-list-item v-for="(author, i) in statistics.topTenFavoriteAuthors" :key="author.name">
               <template #prepend>
-                <v-avatar size="26" color="primary" variant="tonal" class="text-caption font-weight-bold">
+                <v-avatar
+                  size="26"
+                  color="primary"
+                  variant="tonal"
+                  class="text-caption font-weight-bold"
+                >
                   {{ Number(i) + 1 }}
                 </v-avatar>
               </template>
@@ -52,7 +54,12 @@
               :key="entry.year"
             >
               <template #prepend>
-                <v-avatar size="26" color="primary" variant="tonal" class="text-caption font-weight-bold">
+                <v-avatar
+                  size="26"
+                  color="primary"
+                  variant="tonal"
+                  class="text-caption font-weight-bold"
+                >
                   {{ Number(i) + 1 }}
                 </v-avatar>
               </template>
@@ -82,7 +89,8 @@
               color="primary"
               variant="tonal"
               size="small"
-            >{{ tag.name }}</v-chip>
+              >{{ tag.name }}</v-chip
+            >
           </v-card-text>
         </v-card>
       </v-col>
@@ -99,11 +107,14 @@
           <v-col
             v-for="book in statistics.mostRatedBooks"
             :key="book.id"
-            cols="6" sm="4" md="3" lg="2"
+            cols="6"
+            sm="4"
+            md="3"
+            lg="2"
           >
             <v-card rounded="xl" elevation="1">
               <v-tooltip
-                :text="`${book.authors.map(a => a.name).join(' & ')} — ${book.title}`"
+                :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
                 location="top"
               >
                 <template #activator="{ props: tp }">
@@ -111,7 +122,12 @@
                 </template>
               </v-tooltip>
               <v-card-text class="py-2 text-center">
-                <v-chip prepend-icon="mdi-thumb-up" size="x-small" color="secondary" variant="tonal">
+                <v-chip
+                  prepend-icon="mdi-thumb-up"
+                  size="x-small"
+                  color="secondary"
+                  variant="tonal"
+                >
                   {{ book.like_count }}
                 </v-chip>
               </v-card-text>
@@ -132,11 +148,14 @@
           <v-col
             v-for="book in statistics.topRatedBooks"
             :key="book.id"
-            cols="6" sm="4" md="3" lg="2"
+            cols="6"
+            sm="4"
+            md="3"
+            lg="2"
           >
             <v-card rounded="xl" elevation="1">
               <v-tooltip
-                :text="`${book.authors.map(a => a.name).join(' & ')} — ${book.title}`"
+                :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
                 location="top"
               >
                 <template #activator="{ props: tp }">
@@ -152,7 +171,9 @@
                   density="compact"
                   size="x-small"
                 />
-                <div class="text-caption text-medium-emphasis">{{ book.like_average.toFixed(1) }}</div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ book.like_average.toFixed(1) }}
+                </div>
               </v-card-text>
             </v-card>
           </v-col>
@@ -168,9 +189,9 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
-import type BookStatisticsModel from "../model/book-statistics.interface";
-import api from "../api/axios";
+import { ref, watch, onMounted } from 'vue';
+import type BookStatisticsModel from '../model/book-statistics.interface';
+import api from '../api/axios';
 
 const props = defineProps<{ changeStatistics: boolean }>();
 
@@ -178,7 +199,7 @@ const statistics = ref<BookStatisticsModel | null>(null);
 
 function getStatistics() {
   api
-    .get("/books/statistics")
+    .get('/books/statistics')
     .then((response: { data: { statistics: BookStatisticsModel } }) => {
       if (response.data.statistics) {
         statistics.value = response.data.statistics;
