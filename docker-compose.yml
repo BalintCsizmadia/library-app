@@ -18,7 +18,7 @@ services:
     links:
       - library_api
     ports:
-      - "8080:8080"
+      - "5173:5173"
     volumes:
       - './frontend:/frontend'
       - '/frontend/node_modules'

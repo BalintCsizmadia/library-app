@@ -44,11 +44,11 @@ const bookService = {
 
       const mostRatedBooks = data.table
         .sort((a, b) => b.like_count - a.like_count)
-        .slice(0, 5);
+        .slice(0, 6);
 
       const topRatedBooks = data.table
         .sort((a, b) => b.like_average - a.like_average)
-        .slice(0, 5);
+        .slice(0, 6);
 
       const statistics = {
         numberOfBooks,

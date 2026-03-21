@@ -1,100 +1,108 @@
 <template>
-  <v-list :class="color ? color : 'teal darken-3'">
-    <v-parallax dark src="../assets/book.jpg">
-      <img class="cover-img" v-bind:src="getBigCoverImage(book.cover)" />
-    </v-parallax>
+  <v-card rounded="xl" elevation="2" class="overflow-hidden">
+    <div class="d-flex flex-column flex-sm-row">
+      <!-- Cover image -->
+      <v-img
+        v-if="book.cover"
+        :src="getBigCoverImage(book.cover)"
+        width="200"
+        min-width="200"
+        max-height="320"
+        cover
+        class="flex-shrink-0"
+      />
+      <div
+        v-else
+        class="d-flex align-center justify-center bg-surface-variant flex-shrink-0"
+        style="min-width: 200px; min-height: 240px"
+      >
+        <v-icon size="72" color="secondary">mdi-book-open-page-variant</v-icon>
+      </div>
 
-    <p class="text-center text-padding">{{ book.description }}</p>
-    <v-list-item
-      v-for="(field, i) in fields"
-      :key="i"
-      :style="handleTextDisplay(field.key)"
-    >
-      <v-list-item-content>
-        <v-list-item-subtitle v-text="field.key"></v-list-item-subtitle>
-        <v-list-item-title v-text="field.value"></v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-    <v-list-item>
-      <v-list-item-content>
-        <v-list-item-subtitle v-text="'release'"></v-list-item-subtitle>
-        <v-list-item-title
-          v-text="book.year_of_publishing || 'n/a'"
-        ></v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-    <notification :show="showNotification" text="Success" />
+      <!-- Book info -->
+      <div class="flex-grow-1 pa-5">
+        <h2 class="text-h5 font-weight-bold mb-1">{{ book.title || '—' }}</h2>
+        <p class="text-subtitle-1 text-secondary font-weight-medium mb-4">
+          {{ book.authors?.map((a) => a.name).join(', ') || 'Unknown author' }}
+        </p>
 
-    <v-tooltip top>
-      <template v-slot:activator="{ on }">
+        <div class="d-flex flex-wrap ga-2 mb-4">
+          <v-chip
+            v-if="book.year_of_publishing"
+            size="small"
+            color="primary"
+            variant="tonal"
+            prepend-icon="mdi-calendar"
+            >{{ book.year_of_publishing }}</v-chip
+          >
+          <v-chip
+            v-if="book.like_count"
+            size="small"
+            color="secondary"
+            variant="tonal"
+            prepend-icon="mdi-thumb-up"
+            >{{ book.like_count }} likes</v-chip
+          >
+          <v-chip
+            v-if="book.reviews_count"
+            size="small"
+            variant="tonal"
+            prepend-icon="mdi-comment-text"
+            >{{ book.reviews_count }} reviews</v-chip
+          >
+        </div>
+
+        <p v-if="book.description" class="text-body-2 text-medium-emphasis mb-5 book-description">
+          {{ book.description }}
+        </p>
+
         <v-btn
-          fixed
-          dark
-          fab
-          bottom
-          right
-          large
-          :color="background"
-          class="add-button"
-          v-on:click="addToList(book)"
-          v-on="on"
+          color="secondary"
+          rounded="lg"
+          variant="elevated"
+          prepend-icon="mdi-bookmark-plus"
+          :loading="adding"
+          @click="addToList(book)"
+          >Add to my list</v-btn
         >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </template>
-      <span>Add to my list</span>
-    </v-tooltip>
-  </v-list>
+      </div>
+    </div>
+    <notification :show="showNotification" text="Book added to your list!" />
+  </v-card>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Notification from "./Notification.vue";
-import Book from "../model/book.interface";
+<script setup lang="ts">
+import { ref, nextTick } from 'vue';
+import Notification from './Notification.vue';
+import type Book from '../model/book.interface';
+import api from '../api/axios';
 
-export default Vue.extend({
-  name: "BookDetails",
-  data: () => ({
-    showNotification: false,
-    background: "pink"
-  }),
-  props: {
-    book: Object,
-    fields: Array,
-    color: String
-  },
-  components: {
-    Notification
-  },
-  methods: {
-    handleTextDisplay(key: string) {
-      return key === "fullName" ? "display: none;" : "";
-    },
-    addToList(book: Book) {
-      this.showNotification = true;
-      return this.axios.post(`/books/${book.id}`, { book }).then(res => {
-        this.showNotification = false;
-        this.background = "green darken-3";
-      });
-    },
-    getBigCoverImage(coverUrl: string) {
-      if (coverUrl) {
-        return coverUrl.replace("normal", "big");
-      }
-    }
-  }
-});
+defineProps<{ book: Partial<Book> }>();
+
+const showNotification = ref(false);
+const adding = ref(false);
+
+function getBigCoverImage(coverUrl: string) {
+  return coverUrl.replace('normal', 'big');
+}
+
+async function addToList(book: Partial<Book>) {
+  adding.value = true;
+  await api.post(`/books/${book.id}`, { book }).catch(console.error);
+  adding.value = false;
+  showNotification.value = false;
+  await nextTick();
+  showNotification.value = true;
+  nextTick(() => {
+    showNotification.value = false;
+  });
+}
 </script>
 
 <style scoped>
-.cover-img {
-  width: 300px;
-  margin: auto;
-}
-.text-padding {
-  padding: 1rem 5rem 1rem;
-}
-.add-button {
-  margin: 0 25px 20px 0;
+.book-description {
+  max-height: 130px;
+  overflow-y: auto;
+  line-height: 1.7;
 }
 </style>

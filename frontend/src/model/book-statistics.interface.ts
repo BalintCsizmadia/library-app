@@ -1,5 +1,5 @@
-import ItemCount from "./item-count.interface";
-import Book from "./book.interface";
+import ItemCount from './item-count.interface';
+import Book from './book.interface';
 
 export default interface BookStatistics {
   numberOfBooks: number;
