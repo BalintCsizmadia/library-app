@@ -191,21 +191,21 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import type BookStatisticsModel from '../model/book-statistics.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
 const props = defineProps<{ changeStatistics: boolean }>();
 
 const statistics = ref<BookStatisticsModel | null>(null);
 
-function getStatistics() {
-  api
-    .get('/books/statistics')
-    .then((response: { data: { statistics: BookStatisticsModel } }) => {
-      if (response.data.statistics) {
-        statistics.value = response.data.statistics;
-      }
-    })
-    .catch(console.error);
+async function getStatistics() {
+  try {
+    const data = await api.get('books/statistics').json<{ statistics: BookStatisticsModel }>();
+    if (data.statistics) {
+      statistics.value = data.statistics;
+    }
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 onMounted(() => getStatistics());

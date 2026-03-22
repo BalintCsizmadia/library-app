@@ -75,7 +75,7 @@
 import { ref, nextTick } from 'vue';
 import Notification from './Notification.vue';
 import type Book from '../model/book.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
 defineProps<{ book: Partial<Book> }>();
 
@@ -88,7 +88,11 @@ function getBigCoverImage(coverUrl: string) {
 
 async function addToList(book: Partial<Book>) {
   adding.value = true;
-  await api.post(`/books/${book.id}`, { book }).catch(console.error);
+  try {
+    await api.post(`books/${book.id}`, { json: { book } });
+  } catch (e) {
+    console.error(e);
+  }
   adding.value = false;
   showNotification.value = false;
   await nextTick();

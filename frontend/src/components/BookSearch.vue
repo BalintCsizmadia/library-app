@@ -46,7 +46,7 @@ import { ref, computed, watch } from 'vue';
 import BookDetails from './BookDetails.vue';
 import type BasicBook from '../model/book-basic.interface';
 import type Book from '../model/book.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
 const isLoading = ref(false);
 const model = ref<(BasicBook & { fullName: string }) | null>(null);
@@ -61,28 +61,31 @@ const items = computed(() =>
   }))
 );
 
-watch(search, (val: string | undefined) => {
+watch(search, async (val: string | undefined) => {
   if (val && val.length % 3 === 0) {
     if (isLoading.value) return;
     isLoading.value = true;
-    api
-      .get('/books', { params: { search: val.trim() } })
-      .then((res: { data: { books: BasicBook[] } }) => {
-        books.value = res.data.books;
-      })
-      .catch(console.error)
-      .finally(() => (isLoading.value = false));
+    try {
+      const data = await api
+        .get('books', { searchParams: { search: val.trim() } })
+        .json<{ books: BasicBook[] }>();
+      books.value = data.books;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
   }
 });
 
-watch(model, (m) => {
+watch(model, async (m) => {
   if (m && m.id) {
-    api
-      .get(`/books/${m.id}`)
-      .then((response: { data: { book: Book } }) => {
-        book.value = response.data.book;
-      })
-      .catch(console.error);
+    try {
+      const data = await api.get(`books/${m.id}`).json<{ book: Book }>();
+      book.value = data.book;
+    } catch (e) {
+      console.error(e);
+    }
   }
 });
 </script>
