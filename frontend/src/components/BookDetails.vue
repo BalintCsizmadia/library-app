@@ -66,9 +66,7 @@
           @click="addToList(book)"
           >Add to my list</v-btn
         >
-        <v-chip v-else color="primary" variant="tonal" prepend-icon="mdi-check">
-          Already in your list
-        </v-chip>
+        <v-chip v-else variant="outlined" prepend-icon="mdi-check"> Already in your list </v-chip>
       </div>
     </div>
     <notification :show="showNotification" text="Book added to your list!" />

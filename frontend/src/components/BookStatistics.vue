@@ -113,14 +113,11 @@
             lg="2"
           >
             <v-card rounded="xl" elevation="1">
-              <v-tooltip
-                :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
-                location="top"
-                theme="light"
-              >
+              <v-tooltip location="top" theme="light">
                 <template #activator="{ props: tp }">
                   <v-img :src="book.cover" height="150" cover v-bind="tp" />
                 </template>
+                <span>{{ book.authors.map((a) => a.name).join(' & ') }} — {{ book.title }}</span>
               </v-tooltip>
               <v-card-text class="py-2 text-center">
                 <v-chip
@@ -155,14 +152,11 @@
             lg="2"
           >
             <v-card rounded="xl" elevation="1">
-              <v-tooltip
-                :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
-                location="top"
-                theme="light"
-              >
+              <v-tooltip location="top" theme="light">
                 <template #activator="{ props: tp }">
                   <v-img :src="book.cover" height="150" cover v-bind="tp" />
                 </template>
+                <span>{{ book.authors.map((a) => a.name).join(' & ') }} — {{ book.title }}</span>
               </v-tooltip>
               <v-card-text class="py-2 text-center">
                 <v-rating
