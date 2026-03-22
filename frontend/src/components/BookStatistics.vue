@@ -116,6 +116,7 @@
               <v-tooltip
                 :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
                 location="top"
+                theme="light"
               >
                 <template #activator="{ props: tp }">
                   <v-img :src="book.cover" height="150" cover v-bind="tp" />
@@ -157,6 +158,7 @@
               <v-tooltip
                 :text="`${book.authors.map((a) => a.name).join(' & ')} — ${book.title}`"
                 location="top"
+                theme="light"
               >
                 <template #activator="{ props: tp }">
                   <v-img :src="book.cover" height="150" cover v-bind="tp" />
