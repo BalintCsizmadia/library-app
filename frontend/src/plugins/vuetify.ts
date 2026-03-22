@@ -23,6 +23,7 @@ export default createVuetify({
           success: '#38A169',
           warning: '#D69E2E',
           'surface-variant': '#EDF2F7',
+          'on-surface-variant': '#2D3748',
           'on-primary': '#FFFFFF',
           'on-secondary': '#FFFFFF'
         }
@@ -40,6 +41,7 @@ export default createVuetify({
           success: '#68D391',
           warning: '#F6E05E',
           'surface-variant': '#2D3748',
+          'on-surface-variant': '#E2E8F0',
           'on-primary': '#E2E8F0',
           'on-secondary': '#1A202C'
         }
