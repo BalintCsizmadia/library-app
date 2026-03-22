@@ -30,7 +30,7 @@
     "dotenv": "^16.4.0",
     "koa": "^2.15.0",
     "koa-bodyparser": "^4.4.0",
-    "koa-logger": "^3.2.1",
+    "koa-logger": "^4.0.0",
     "nodemon": "^3.1.0"
   },
   "devDependencies": {
