@@ -64,7 +64,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import Modal from './Modal.vue';
 import ImageModal from './ImageModal.vue';
 import type Book from '../model/book.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
 const props = defineProps<{ changeBook: boolean }>();
 
@@ -96,23 +96,25 @@ const items = computed(() =>
   })
 );
 
-function loadList() {
+async function loadList() {
   isLoading.value = true;
-  api
-    .get('/books/my-books')
-    .then((response: { data: { books: { table: Book[] } } }) => {
-      books.value = response.data.books.table;
-    })
-    .catch(console.error)
-    .finally(() => (isLoading.value = false));
+  try {
+    const data = await api.get('books/my-books').json<{ books: { table: Book[] } }>();
+    books.value = data.books.table;
+  } catch (e) {
+    console.error(e);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 function rateItem(item: Book) {
   item.like = true;
 }
 
-function deleteItem(id: number) {
-  api.delete(`/books/${id}`).then(() => loadList());
+async function deleteItem(id: number) {
+  await api.delete(`books/${id}`);
+  loadList();
 }
 
 onMounted(() => loadList());

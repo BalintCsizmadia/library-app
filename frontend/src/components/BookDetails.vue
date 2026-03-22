@@ -57,6 +57,7 @@
         </p>
 
         <v-btn
+          v-if="!savedBookIds.has(book.id!)"
           color="secondary"
           rounded="lg"
           variant="elevated"
@@ -65,6 +66,7 @@
           @click="addToList(book)"
           >Add to my list</v-btn
         >
+        <v-chip v-else variant="outlined" prepend-icon="mdi-check"> Already in your list </v-chip>
       </div>
     </div>
     <notification :show="showNotification" text="Book added to your list!" />
@@ -75,9 +77,10 @@
 import { ref, nextTick } from 'vue';
 import Notification from './Notification.vue';
 import type Book from '../model/book.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
-defineProps<{ book: Partial<Book> }>();
+const { book, savedBookIds } = defineProps<{ book: Partial<Book>; savedBookIds: Set<number> }>();
+const emit = defineEmits<{ added: [id: number] }>();
 
 const showNotification = ref(false);
 const adding = ref(false);
@@ -88,7 +91,12 @@ function getBigCoverImage(coverUrl: string) {
 
 async function addToList(book: Partial<Book>) {
   adding.value = true;
-  await api.post(`/books/${book.id}`, { book }).catch(console.error);
+  try {
+    await api.post(`books/${book.id}`, { json: { book } });
+    emit('added', book.id!);
+  } catch (e) {
+    console.error(e);
+  }
   adding.value = false;
   showNotification.value = false;
   await nextTick();

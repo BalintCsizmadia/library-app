@@ -34,7 +34,12 @@
     <v-row justify="center">
       <v-col cols="12" md="10" lg="8">
         <v-expand-transition>
-          <BookDetails v-if="model" :book="book" />
+          <BookDetails
+            v-if="model"
+            :book="book"
+            :saved-book-ids="savedBookIds"
+            @added="(id) => savedBookIds.add(id)"
+          />
         </v-expand-transition>
       </v-col>
     </v-row>
@@ -42,17 +47,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import BookDetails from './BookDetails.vue';
 import type BasicBook from '../model/book-basic.interface';
 import type Book from '../model/book.interface';
-import api from '../api/axios';
+import api from '../api/apiClient';
 
 const isLoading = ref(false);
 const model = ref<(BasicBook & { fullName: string }) | null>(null);
 const search = ref<string | undefined>(undefined);
 const books = ref<BasicBook[]>([]);
 const book = ref<Partial<Book>>({});
+const savedBookIds = ref<Set<number>>(new Set());
 
 const items = computed(() =>
   books.value.map((item: BasicBook) => ({
@@ -61,28 +67,40 @@ const items = computed(() =>
   }))
 );
 
-watch(search, (val: string | undefined) => {
-  if (val && val.length % 3 === 0) {
-    if (isLoading.value) return;
-    isLoading.value = true;
-    api
-      .get('/books', { params: { search: val.trim() } })
-      .then((res: { data: { books: BasicBook[] } }) => {
-        books.value = res.data.books;
-      })
-      .catch(console.error)
-      .finally(() => (isLoading.value = false));
+onMounted(async () => {
+  try {
+    const data = await api.get('books/my-books').json<{ books: { table: Book[] } }>();
+    savedBookIds.value = new Set(data.books.table.map((b) => b.id));
+  } catch (e) {
+    console.error(e);
   }
 });
 
-watch(model, (m) => {
+watch(search, async (val: string | undefined) => {
+  if (val && val.length % 3 === 0) {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    try {
+      const data = await api
+        .get('books', { searchParams: { search: val.trim() } })
+        .json<{ books: BasicBook[] }>();
+      books.value = data.books;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+});
+
+watch(model, async (m) => {
   if (m && m.id) {
-    api
-      .get(`/books/${m.id}`)
-      .then((response: { data: { book: Book } }) => {
-        book.value = response.data.book;
-      })
-      .catch(console.error);
+    try {
+      const data = await api.get(`books/${m.id}`).json<{ book: Book }>();
+      book.value = data.book;
+    } catch (e) {
+      console.error(e);
+    }
   }
 });
 </script>
